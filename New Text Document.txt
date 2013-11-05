@@ -1,0 +1,138 @@
+//create courses
+
+create table courses(
+	CID		varchar(4) not null primary key,
+	title		varchar(20)not null,
+	entry_year	int not null,
+	course_duration	int not null,
+);
+
+//create modules
+
+create table modules(
+	MID		varchar(6) not null primary key,
+	title		varchar(20) not null,
+	descr	varchar(100),
+	CID		varchar(4) foreign key references courses(CID)
+);
+
+//create books
+
+CREATE TABLE Books(
+	BID		varchar(4)  not null primary key,
+	title		varchar(15) not null,
+	first_name	varchar(15),
+	surname 	varchar(15) not null,
+	publisher	varchar(10),
+	year		int,
+	MID		varchar(6) foreign key references Modules(MID),
+	keyword 	varchar(30) not null,
+);
+
+//all courses
+
+Select *
+From Courses
+group by Cid
+
+//all modules
+
+Select * 
+from Modules
+group by Mid
+
+//all books
+
+Select * 
+from Books
+group by Bid
+
+//specific course
+
+Select *
+from courses
+where CID = $cid
+
+//specific module
+
+Select *
+from Modules 
+where mid = $mid
+
+//specific book
+
+select * 
+from books 
+where bid = $bid
+
+//modules from course
+
+Select *
+from Modules
+where modules_cid = $cid
+group by mid
+
+//books from module
+
+select *
+from books 
+where books_mid = $mid
+group by bid
+
+//books from module from year
+
+select * 
+from books 
+where module_cid =$cid and books_mid =$mid
+group by bid
+
+//add to courses
+
+insert into Courses
+Values($CID,$title,$year,$duration)
+
+//add to books
+
+insert into books
+Values($bid,$title,$firstName,$surname,$publisher,$year,$MID,$KID);
+
+//add to modules
+
+insert into modules
+Values($MID,$title,$desc,$CID);
+
+//edit course
+
+update course 
+set title = $title, year =$year, duration = $duration
+where cid = $cid;
+
+//edit book
+
+update books 
+set title = $title, firstname = $firstname, surname = $surname, publisher = $publiser, year =$year, mid = $MID,kid = $KID
+where BID = $BID;
+
+//edit module
+
+update module
+set title = $title, description = $desc, cid = $CID
+where mid=$mid;
+
+//remove from courses
+
+delete from courses 
+where cid = $cid;
+
+//remove from books
+
+delete from books
+where bid= $bid;
+
+//remove from module
+
+delete from module
+where mid = $mid;
+
+
+
