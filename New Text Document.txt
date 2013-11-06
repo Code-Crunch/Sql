@@ -26,7 +26,7 @@ CREATE TABLE Books(
 	publisher	varchar(10),
 	year		int,
 	MID		varchar(6) foreign key references Modules(MID),
-	keyword 	varchar(30) not null,
+	keyword 	varchar(100) not null,
 );
 
 //all courses
@@ -67,24 +67,29 @@ where bid = $bid
 
 //modules from course
 
-Select *
+Select Modules.Mid,Modules.title,modules.descr,modules.cid
 from Modules
-where modules_cid = $cid
-group by mid
+left join courses
+on Modules.CID = $cid
+order by modules.mid
 
 //books from module
 
-select *
+select books.bid,books.title,books.firstname,books.surname,books.publisher,books.year
 from books 
-where books_mid = $mid
-group by bid
+left join module
+on books_mid = $mid
+order by books.bid
 
-//books from module from year
+//books from module from course
 
-select * 
+select books.bid,books.title,books.first_name,books.surname,books.publisher,books.year
 from books 
-where module_cid =$cid and books_mid =$mid
-group by bid
+left join modules
+left join courses
+on modules.cid =courses.cid 
+on books.MID =modules.mid
+order by bid
 
 //add to courses
 
@@ -94,7 +99,7 @@ Values($CID,$title,$year,$duration)
 //add to books
 
 insert into books
-Values($bid,$title,$firstName,$surname,$publisher,$year,$MID,$KID);
+Values($bid,$title,$firstName,$surname,$publisher,$year,$MID,$keyword);
 
 //add to modules
 
@@ -110,7 +115,7 @@ where cid = $cid;
 //edit book
 
 update books 
-set title = $title, firstname = $firstname, surname = $surname, publisher = $publiser, year =$year, mid = $MID,kid = $KID
+set title = $title, firstname = $firstname, surname = $surname, publisher = $publiser, year =$year, mid = $MID,keyword = $keyword
 where BID = $BID;
 
 //edit module
